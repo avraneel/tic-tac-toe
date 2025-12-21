@@ -12,9 +12,7 @@ function game() {
         [' ', ' ', ' ']
     ];
 
-    const getBoard = function() {
-        return board;
-    }
+    const getBoard = () => board;
 
     const displayBoard = function() {
         console.log(
