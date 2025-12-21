@@ -12,9 +12,8 @@ function game() {
         [' ', ' ', ' ']
     ];
 
-    const addEntry = function (pos, val) {
-
-
+    const getBoard = function() {
+        return board;
     }
 
     const displayBoard = function() {
@@ -88,9 +87,16 @@ function game() {
             console.log("It's a draw");
         } 
     }
-    return {runGame};
+    return {runGame, getBoard};
 }
 
-const board = game();
-board.runGame();
+const gameboard = game();
+
+function renderBoard() {
+    const board = [
+        ['x', '0', 'x'],
+        ['x', '0', '0'],
+        ['0', 'x', 'x']
+    ];
+}
 
