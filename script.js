@@ -14,6 +14,7 @@ function game() {
 
     const getBoard = () => board;
 
+
     const displayBoard = function() {
         console.log(
             `${board[0][0]}|${board[0][1]}|${board[0][2]}\n${board[1][0]}|${board[1][1]}|${board[1][2]}\n${board[2][0]}|${board[2][1]}|${board[2][2]}`
@@ -48,7 +49,6 @@ function game() {
             return 2;
         }
         else {
-            console.log("Else case");
             return 0;
         }
     }
@@ -67,7 +67,7 @@ function game() {
             const col = pos%3;
             if(board[row][col] == 'x' || board[row][col] == '0') {
                 // Check if cell is already filled
-                alert("Can't re-enter in a value that is already filled");
+                console.log("Can't re-enter in a value that is already filled");
                 continue;
             }
             else {
