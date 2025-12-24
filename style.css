@@ -8,6 +8,10 @@ td {
     width: 150px;
 }
 
+td:hover {
+    background-color: yellow;
+}
+
 .container {
     display: flex;
     flex-direction: column;
