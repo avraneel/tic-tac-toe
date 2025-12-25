@@ -6,10 +6,10 @@ function player(sign) {
 
 function game() {
     const player1 = player("x");
-    const player2 = player("0");
+    const player2 = player("O");
 
     // IIFE: The anonymous function creates one board object immediately
-    const board = (
+    const gameboard = (
         function() {
             const board = [
                 ["", "", ""],
@@ -43,7 +43,8 @@ function game() {
     )(); // Board IIFE ends here
 
     // Function to check End Conditions
-    const checkWin = function() {
+    const checkEnd = function() {
+        const board = gameboard.board;
         // Case 1: Player 1 wins
         if(
             (board[0][0] == player1.sign && board[0][1] == player1.sign && board[0][2] == player1.sign) ||
@@ -73,75 +74,48 @@ function game() {
             return 2;
         }
         // Case 3: It's a draw if no cell is empty
-        else if(!board.includes("")) {
+        else if(!(board[0].includes("") || board[1].includes("") || board[2].includes(""))) {
             console.log("It's a draw");
             return 3;
         }
+        // Case 4: Game goes on
         else {
             return 0;
         }
     }
 
     const runGame = () => {
-        let winflag = 0;
-        let filled = 0
-        let player1 = true;
+        gameboard.setVal(0, player1.sign);
+        checkEnd();
+        gameboard.getBoard();
+        gameboard.setVal(1, player2.sign);
+        checkEnd();
+        gameboard.getBoard();
+        gameboard.setVal(2, player1.sign);
+        checkEnd();
+        gameboard.getBoard();
+        gameboard.setVal(3, player2.sign);
+        checkEnd();
+        gameboard.getBoard();
+        gameboard.setVal(4, player1.sign);
+        checkEnd();
+        gameboard.getBoard();
+        gameboard.setVal(5, player2.sign);
+        checkEnd();
+        gameboard.getBoard();
+        gameboard.setVal(7, player1.sign);
+        checkEnd();
+        gameboard.getBoard();
+        gameboard.setVal(6, player2.sign);
+        checkEnd();
+        gameboard.getBoard();
+        gameboard.setVal(8, player2.sign);
+        checkEnd();
+        gameboard.getBoard();
 
-        while(filled < 9) {
-            if(player1) {
-                console.log(`Round ${filled+1}`);
-                board.setVal(0, 1)
-
-
-
-
-                setVal()
-                displayBoard();
-                if(checkWin() != 0) {
-                    winflag = 1;
-                    console.log(winflag);
-                    break;
-                }
-                console.log(`Round ${filled} finished`);
-                player1 = false;
-            }
-            else {
-                alert("[Player 2 round]");
-                const pos = prompt("Enter pos");
-                if(pos > 8) {
-                    alert("pos must be within range");
-                }
-                const val = "0"
-                const row = Math.floor(pos/3);
-                const col = pos%3;
-                if(board[row][col] != " ") {
-                    // Check if cell is already filled
-                    console.log("Can't re-enter in a value that is already filled");
-                    continue;
-                }
-                else {
-                    // Input the value on the board
-                    board[row][col] = val;
-                    filled++;
-                    const cell = document.querySelector(`#c${pos}`);
-                    cell.textContent = val;
-                }
-                displayBoard();
-                if(checkWin() != 0) {
-                    winflag = 1;
-                    break;
-                }
-                console.log(`Round ${filled} finished`);
-                player1 = true;
-            }
-        }
-
-        // If all cells filled but no winner, then flag is unchanged
-        if(winflag == 0) {
-            console.log("It's a draw");
-        } 
     }
     return {runGame};
 }
 
-game.
+const g = game();
+g.runGame();
