@@ -11,23 +11,40 @@ function game() {
     // IIFE: The anonymous function creates one board object immediately
     const board = (
         function() {
-
             const board = [
                 ["", "", ""],
                 ["", "", ""],
                 ["", "", ""]
             ];
 
+            const setVal = (pos, val) => {
+                if(pos > 8) {
+                    return 1;
+                }
+                const row = Math.floor(pos/3);
+                const col = pos%3;
+                // Check if cell is already filled
+                if(board[row][col] != "") {
+                    return 2;
+                }
+                else {
+                    board[row][col] = val;
+                    return 0;
+                }
+            }
+
             const getBoard = () => {
                 console.log(
                     `${board[0][0]}|${board[0][1]}|${board[0][2]}\n${board[1][0]}|${board[1][1]}|${board[1][2]}\n${board[2][0]}|${board[2][1]}|${board[2][2]}`
                 );
             };
-            return {board, getBoard};
+            return {board, setVal, getBoard};
         }
-    )();
+    )(); // Board IIFE ends here
 
+    // Function to check End Conditions
     const checkWin = function() {
+        // Case 1: Player 1 wins
         if(
             (board[0][0] == player1.sign && board[0][1] == player1.sign && board[0][2] == player1.sign) ||
             (board[1][0] == player1.sign && board[1][1] == player1.sign && board[1][2] == player1.sign) ||
@@ -41,6 +58,7 @@ function game() {
             console.log("Player 1 wins!");
             return 1;
         } 
+        // Case 2: Player 2 wins
         else if(
             (board[0][0] == player2.sign && board[0][1] == player2.sign && board[0][2] == player2.sign) ||
             (board[1][0] == player2.sign && board[1][1] == player2.sign && board[1][2] == player2.sign) ||
@@ -54,6 +72,11 @@ function game() {
             console.log("Player 2 wins!");
             return 2;
         }
+        // Case 3: It's a draw if no cell is empty
+        else if(!board.includes("")) {
+            console.log("It's a draw");
+            return 3;
+        }
         else {
             return 0;
         }
@@ -66,24 +89,13 @@ function game() {
 
         while(filled < 9) {
             if(player1) {
-                alert("[Player 1 round]");
-                const pos = prompt("Enter pos");
-                if(pos > 8) {
-                    alert("pos must be within range");
-                }
-                const val = p1val;
-                const row = Math.floor(pos/3);
-                const col = pos%3;
-                if(board[row][col] != "") {
-                    // Check if cell is already filled
-                    alert("Can't re-enter in a value that is already filled");
-                    continue;
-                }
-                else {
-                    // Input the value on the board
-                    board[row][col] = p1val;
-                    filled++;
-                }
+                console.log(`Round ${filled+1}`);
+                board.setVal(0, 1)
+
+
+
+
+                setVal()
                 displayBoard();
                 if(checkWin() != 0) {
                     winflag = 1;
@@ -132,16 +144,4 @@ function game() {
     return {runGame};
 }
 
-const gameboard = game();
-
-
-cells.forEach(
-    cell => {
-        cell.addEventListener( 'click',
-            renderCell()
-        )
-    }
-)
-
-
-gameboard.runGame()
+game.
