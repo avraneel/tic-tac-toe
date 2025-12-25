@@ -1,49 +1,55 @@
 "use strict";
 
-function player(name, sign) {
-    return {name, sign};
+function player(sign) {
+    return {sign};
 }
 
-
 function game() {
-    const board = [
-        [' ', ' ', ' '],
-        [' ', ' ', ' '],
-        [' ', ' ', ' ']
-    ];
+    const player1 = player("x");
+    const player2 = player("0");
 
-    const getBoard = () => board;
+    // IIFE: The anonymous function creates one board object immediately
+    const board = (
+        function() {
 
+            const board = [
+                ["", "", ""],
+                ["", "", ""],
+                ["", "", ""]
+            ];
 
-    const displayBoard = function() {
-        console.log(
-            `${board[0][0]}|${board[0][1]}|${board[0][2]}\n${board[1][0]}|${board[1][1]}|${board[1][2]}\n${board[2][0]}|${board[2][1]}|${board[2][2]}`
-        );
-    }
+            const getBoard = () => {
+                console.log(
+                    `${board[0][0]}|${board[0][1]}|${board[0][2]}\n${board[1][0]}|${board[1][1]}|${board[1][2]}\n${board[2][0]}|${board[2][1]}|${board[2][2]}`
+                );
+            };
+            return {board, getBoard};
+        }
+    )();
 
-    const win = function() {
+    const checkWin = function() {
         if(
-            (board[0][0] == 'x' && board[0][1] == 'x' && board[0][2] == 'x') ||
-            (board[1][0] == 'x' && board[1][1] == 'x' && board[1][2] == 'x') ||
-            (board[2][0] == 'x' && board[2][1] == 'x' && board[2][2] == 'x') ||
-            (board[0][0] == 'x' && board[1][0] == 'x' && board[2][0] == 'x') ||
-            (board[0][1] == 'x' && board[1][1] == 'x' && board[2][1] == 'x') ||
-            (board[0][2] == 'x' && board[1][2] == 'x' && board[2][2] == 'x') ||
-            (board[0][0] == 'x' && board[1][1] == 'x' && board[2][2] == 'x') ||
-            (board[0][2] == 'x' && board[1][1] == 'x' && board[2][0] == 'x')
+            (board[0][0] == player1.sign && board[0][1] == player1.sign && board[0][2] == player1.sign) ||
+            (board[1][0] == player1.sign && board[1][1] == player1.sign && board[1][2] == player1.sign) ||
+            (board[2][0] == player1.sign && board[2][1] == player1.sign && board[2][2] == player1.sign) ||
+            (board[0][0] == player1.sign && board[1][0] == player1.sign && board[2][0] == player1.sign) ||
+            (board[0][1] == player1.sign && board[1][1] == player1.sign && board[2][1] == player1.sign) ||
+            (board[0][2] == player1.sign && board[1][2] == player1.sign && board[2][2] == player1.sign) ||
+            (board[0][0] == player1.sign && board[1][1] == player1.sign && board[2][2] == player1.sign) ||
+            (board[0][2] == player1.sign && board[1][1] == player1.sign && board[2][0] == player1.sign)
         ) {
             console.log("Player 1 wins!");
             return 1;
         } 
         else if(
-            (board[0][0] == '0' && board[0][1] == '0' && board[0][2] == '0') ||
-            (board[1][0] == '0' && board[1][1] == '0' && board[1][2] == '0') ||
-            (board[2][0] == '0' && board[2][1] == '0' && board[2][2] == '0') ||
-            (board[0][0] == '0' && board[1][0] == '0' && board[2][0] == '0') ||
-            (board[0][1] == '0' && board[1][1] == '0' && board[2][1] == '0') ||
-            (board[0][2] == '0' && board[1][2] == '0' && board[2][2] == '0') ||
-            (board[0][0] == '0' && board[1][1] == '0' && board[2][2] == '0') ||
-            (board[0][2] == '0' && board[1][1] == '0' && board[2][0] == '0')
+            (board[0][0] == player2.sign && board[0][1] == player2.sign && board[0][2] == player2.sign) ||
+            (board[1][0] == player2.sign && board[1][1] == player2.sign && board[1][2] == player2.sign) ||
+            (board[2][0] == player2.sign && board[2][1] == player2.sign && board[2][2] == player2.sign) ||
+            (board[0][0] == player2.sign && board[1][0] == player2.sign && board[2][0] == player2.sign) ||
+            (board[0][1] == player2.sign && board[1][1] == player2.sign && board[2][1] == player2.sign) ||
+            (board[0][2] == player2.sign && board[1][2] == player2.sign && board[2][2] == player2.sign) ||
+            (board[0][0] == player2.sign && board[1][1] == player2.sign && board[2][2] == player2.sign) ||
+            (board[0][2] == player2.sign && board[1][1] == player2.sign && board[2][0] == player2.sign)
         ) {
             console.log("Player 2 wins!");
             return 2;
@@ -53,48 +59,89 @@ function game() {
         }
     }
 
-    const runGame = function() {
-        let flag = 0;
+    const runGame = () => {
+        let winflag = 0;
         let filled = 0
+        let player1 = true;
 
         while(filled < 9) {
-            const pos = prompt("Enter pos");
-            if(pos > 8) {
-                alert("pos must be within range");
-            }
-            const val = prompt("Enter val");
-            const row = Math.floor(pos/3);
-            const col = pos%3;
-            if(board[row][col] == 'x' || board[row][col] == '0') {
-                // Check if cell is already filled
-                console.log("Can't re-enter in a value that is already filled");
-                continue;
+            if(player1) {
+                alert("[Player 1 round]");
+                const pos = prompt("Enter pos");
+                if(pos > 8) {
+                    alert("pos must be within range");
+                }
+                const val = p1val;
+                const row = Math.floor(pos/3);
+                const col = pos%3;
+                if(board[row][col] != "") {
+                    // Check if cell is already filled
+                    alert("Can't re-enter in a value that is already filled");
+                    continue;
+                }
+                else {
+                    // Input the value on the board
+                    board[row][col] = p1val;
+                    filled++;
+                }
+                displayBoard();
+                if(checkWin() != 0) {
+                    winflag = 1;
+                    console.log(winflag);
+                    break;
+                }
+                console.log(`Round ${filled} finished`);
+                player1 = false;
             }
             else {
-                board[row][col] = val;
-                filled++;
+                alert("[Player 2 round]");
+                const pos = prompt("Enter pos");
+                if(pos > 8) {
+                    alert("pos must be within range");
+                }
+                const val = "0"
+                const row = Math.floor(pos/3);
+                const col = pos%3;
+                if(board[row][col] != " ") {
+                    // Check if cell is already filled
+                    console.log("Can't re-enter in a value that is already filled");
+                    continue;
+                }
+                else {
+                    // Input the value on the board
+                    board[row][col] = val;
+                    filled++;
+                    const cell = document.querySelector(`#c${pos}`);
+                    cell.textContent = val;
+                }
+                displayBoard();
+                if(checkWin() != 0) {
+                    winflag = 1;
+                    break;
+                }
+                console.log(`Round ${filled} finished`);
+                player1 = true;
             }
-            displayBoard();
-            if(win() != 0) {
-                flag = 1;
-                break;
-            }
-            console.log(`Round ${filled} finished`);
         }
-        if(flag == 0) {
+
+        // If all cells filled but no winner, then flag is unchanged
+        if(winflag == 0) {
             console.log("It's a draw");
         } 
     }
-    return {runGame, getBoard};
+    return {runGame};
 }
 
 const gameboard = game();
 
-function renderBoard() {
-    const board = [
-        ['x', '0', 'x'],
-        ['x', '0', '0'],
-        ['0', 'x', 'x']
-    ];
-}
 
+cells.forEach(
+    cell => {
+        cell.addEventListener( 'click',
+            renderCell()
+        )
+    }
+)
+
+
+gameboard.runGame()
