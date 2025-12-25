@@ -141,7 +141,7 @@ const displayController = (
             }
         }
 
-        // When we return the object, the cells correspondin to the Display Controller object
+        // When we return the object, the cells corresponding to the Display Controller object
         // will update their values on click
         return {renderBoard};
     }
