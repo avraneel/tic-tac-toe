@@ -4,43 +4,43 @@ function player(sign) {
     return {sign};
 }
 
+// IIFE: The anonymous function creates one board object immediately
+const gameboard = (
+    function() {
+        const board = [
+            ["", "", ""],
+            ["", "", ""],
+            ["", "", ""]
+        ];
+
+        const setBoardValue = (pos, val) => {
+            if(pos > 8) {
+                return 1;
+            }
+            const row = Math.floor(pos/3);
+            const col = pos%3;
+            // Check if cell is already filled
+            if(board[row][col] != "") {
+                return 2;
+            }
+            else {
+                board[row][col] = val;
+                return 0;
+            }
+        }
+
+        const getBoard = () => {
+            console.log(
+                `${board[0][0]}|${board[0][1]}|${board[0][2]}\n${board[1][0]}|${board[1][1]}|${board[1][2]}\n${board[2][0]}|${board[2][1]}|${board[2][2]}`
+            );
+        };
+        return {board, setBoardValue, getBoard};
+    }
+)(); // Board IIFE ends here
+
 function game() {
     const player1 = player("x");
     const player2 = player("O");
-
-    // IIFE: The anonymous function creates one board object immediately
-    const gameboard = (
-        function() {
-            const board = [
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""]
-            ];
-
-            const setVal = (pos, val) => {
-                if(pos > 8) {
-                    return 1;
-                }
-                const row = Math.floor(pos/3);
-                const col = pos%3;
-                // Check if cell is already filled
-                if(board[row][col] != "") {
-                    return 2;
-                }
-                else {
-                    board[row][col] = val;
-                    return 0;
-                }
-            }
-
-            const getBoard = () => {
-                console.log(
-                    `${board[0][0]}|${board[0][1]}|${board[0][2]}\n${board[1][0]}|${board[1][1]}|${board[1][2]}\n${board[2][0]}|${board[2][1]}|${board[2][2]}`
-                );
-            };
-            return {board, setVal, getBoard};
-        }
-    )(); // Board IIFE ends here
 
     // Function to check End Conditions
     const checkEnd = function() {
@@ -85,31 +85,31 @@ function game() {
     }
 
     const runGame = () => {
-        gameboard.setVal(0, player1.sign);
+        gameboard.setBoardValue(0, player1.sign);
         checkEnd();
         gameboard.getBoard();
-        gameboard.setVal(1, player2.sign);
+        gameboard.setBoardValue(1, player2.sign);
         checkEnd();
         gameboard.getBoard();
-        gameboard.setVal(2, player1.sign);
+        gameboard.setBoardValue(2, player1.sign);
         checkEnd();
         gameboard.getBoard();
-        gameboard.setVal(3, player2.sign);
+        gameboard.setBoardValue(3, player2.sign);
         checkEnd();
         gameboard.getBoard();
-        gameboard.setVal(4, player1.sign);
+        gameboard.setBoardValue(4, player1.sign);
         checkEnd();
         gameboard.getBoard();
-        gameboard.setVal(5, player2.sign);
+        gameboard.setBoardValue(5, player2.sign);
         checkEnd();
         gameboard.getBoard();
-        gameboard.setVal(7, player1.sign);
+        gameboard.setBoardValue(7, player1.sign);
         checkEnd();
         gameboard.getBoard();
-        gameboard.setVal(6, player2.sign);
+        gameboard.setBoardValue(6, player2.sign);
         checkEnd();
         gameboard.getBoard();
-        gameboard.setVal(8, player2.sign);
+        gameboard.setBoardValue(8, player2.sign);
         checkEnd();
         gameboard.getBoard();
 
@@ -117,19 +117,37 @@ function game() {
     return {runGame};
 }
 
-function renderBoard() {
-    const board = [
-                ["x", "0", "x"],
-                ["0", "0", "x"],
-                ["0", "x", "0"]
-            ];
-    const cells = document.querySelectorAll(".cell");
-    for(let i = 0; i < cells.length; i++) {
-        cells[i].textContent = board[Math.floor(i/3)][i%3];
+// IIFE: A single display controllers handles I/O stuff
+const displayController = (
+    function() {
+        const cells = document.querySelectorAll(".cell");
+
+        // In this factory function, we attach the 'click' event to each
+        // cell of the board
+        for(let i = 0; i < cells.length; i++) {
+            cells[i].addEventListener('click', function() {
+            cells[i].textContent = "L";
+            })
+        }
+
+        const renderBoard = () => {
+            const board = [
+                        ["x", "0", "x"],
+                        ["0", "0", "x"],
+                        ["0", "x", "0"]
+                    ];
+            for(let i = 0; i < cells.length; i++) {
+                cells[i].textContent = board[Math.floor(i/3)][i%3];
+            }
+        }
+
+        // When we return the object, the cells correspondin to the Display Controller object
+        // will update their values on click
+        return {renderBoard};
     }
-}
+)();
 
 const g = game();
 g.runGame();
 
-renderBoard();
+displayController.renderBoard();
