@@ -117,5 +117,19 @@ function game() {
     return {runGame};
 }
 
+function renderBoard() {
+    const board = [
+                ["x", "0", "x"],
+                ["0", "0", "x"],
+                ["0", "x", "0"]
+            ];
+    const cells = document.querySelectorAll(".cell");
+    for(let i = 0; i < cells.length; i++) {
+        cells[i].textContent = board[Math.floor(i/3)][i%3];
+    }
+}
+
 const g = game();
 g.runGame();
+
+renderBoard();
