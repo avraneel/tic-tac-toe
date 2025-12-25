@@ -21,6 +21,7 @@ const gameboard = (
             const col = pos%3;
             // Check if cell is already filled
             if(board[row][col] != "") {
+                console.log(`Cell ${pos} is already filled!`);
                 return 2;
             }
             else {
@@ -125,8 +126,9 @@ const displayController = (
         // In this factory function, we attach the 'click' event to each
         // cell of the board
         for(let i = 0; i < cells.length; i++) {
-            cells[i].addEventListener('click', function() {
-            cells[i].textContent = "L";
+            cells[i].addEventListener('click', function(playerobj) {
+                if(!gameboard.setBoardValue(i, playerobj.sign))
+                    cells[i].textContent = "L";
             })
         }
 
@@ -134,7 +136,7 @@ const displayController = (
             const board = [
                         ["x", "0", "x"],
                         ["0", "0", "x"],
-                        ["0", "x", "0"]
+                        ["0", "", "0"]
                     ];
             for(let i = 0; i < cells.length; i++) {
                 cells[i].textContent = board[Math.floor(i/3)][i%3];
@@ -148,6 +150,5 @@ const displayController = (
 )();
 
 const g = game();
-g.runGame();
 
 displayController.renderBoard();
