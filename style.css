@@ -22,3 +22,9 @@ td:hover {
     font-size: 48px;
     text-align: center;
 }
+
+.status {
+    height: 40px;
+    width: 100px;
+    border: 1px solid red;
+}
