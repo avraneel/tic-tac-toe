@@ -13,7 +13,6 @@ const gameboard = (
         const setBoardValue = (val, pos) => {
             // Check if cell is already filled
             if(board[pos] != "") {
-                console.log(`Cell ${pos} is already filled!`);
                 return 1;
             }
             else {
@@ -92,10 +91,11 @@ const game = (
                 let endcond = checkEnd();
                 // Switching players
                 if(setReturn == 0) {
+                    console.log("Switching players...");
                     currentPlayer = currentPlayer == playerX ? playerO : playerX;
                 }
                 else {
-                    console.log(`Player ${currentPlayer.sign} has to play again..`);
+                    console.log(`Cell ${pos} is already filled! Player ${currentPlayer.sign} has to play again..`);
                 }
                 gameboard.displayBoard();
                 if(gameOver == true) {
