@@ -85,12 +85,11 @@ const game = (
             console.log(`Player ${currentPlayer.sign} turn`);
             gameboard.setBoardValue(currentPlayer.sign, pos);
             gameboard.displayBoard();
-            if(checkEnd()) {
-                return;
-            }
 
             // Switching players
             currentPlayer = currentPlayer == playerX ? playerO : playerX;
+
+            return checkEnd();
         }
         return {doATurn};
     }
@@ -99,40 +98,49 @@ const game = (
 const displayController = (
     function() {
         const drawBoard = () => {
-            const board = ["O", "X", "O", "X", "O", "X", "O", "X","O"];
-            const boardel = document.querySelector(".board");
-            const cells = ["c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"];
+            //remove previous board
+            const gamearea = document.querySelector(".gamearea");
+            const oldboard = document.querySelector(".board");
+            const newboard = document.createElement("div");
+            newboard.classList.toggle("board");
             for(let i = 0; i < 9; i++) {
                 let cell = document.createElement("div");
                 cell.classList.toggle("cell");
-                cell.id = cells[i];
                 cell.textContent = gameboard.board[i];
-                boardel.appendChild(cell);
-            }
-            console.log(boardel);
-        }
-
-        const getMarker = () => {
-            const cellList = document.querySelectorAll(".cell");
-            let marker = "";
-            for(let i = 0; i < cellList.length; i++) {
-                const currentCell = cellList[i];
-                currentCell.addEventListener("click", () => {
-                    //console.log(currentCell.id[1]);
-                    game.doATurn(currentCell.id[1]);
+                cell.addEventListener("click", () => {
+                    let endcond = 0;
+                    console.log(i);
+                    endcond = game.doATurn(i);
+                    console.log(endcond);
+                    if(endcond != 0) {
+                        displayEndModal(endcond);
+                    }
+                    drawBoard();
                 })
+                newboard.appendChild(cell);
             }
-            console.log(marker);
-            return marker;
+            if(oldboard != null) {
+                gamearea.removeChild(oldboard);
+            }
+            gamearea.appendChild(newboard);
         }
 
-        return {drawBoard, getMarker};
+        const displayEndModal = (endcond) => {
+            switch(endcond) {
+                case 1:
+                    alert("Player X wins!");
+                    break;
+                case 2:
+                    alert("Player Y wins!");
+                    break;
+                default:
+                    alert("Draw.")
+            }
+        }
+
+
+        return {drawBoard};
     }
 )();
 
-game.doATurn(4);
-game.doATurn(5);
-game.doATurn(0);
-game.doATurn(8);
 displayController.drawBoard();
-displayController.getMarker();
