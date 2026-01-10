@@ -1,8 +1,8 @@
 "use strict";
 
 // Player object factory, has a parameter for its sign
-function player(sign) {
-    return {sign};
+function player(sign, name) {
+    return {sign, name};
 }
 
 // IIFE: The anonymous function creates one board object immediately
@@ -40,11 +40,17 @@ const gameboard = (
 
 const game = (
     function() {
-        const playerX = player("X");
-        const playerO = player("O");
+        const n1 = prompt("Enter Player X name");
+        const n2 = prompt("Enter Player Y name");
+
+        const playerX = player("X", n1);
+        const playerO = player("O", n2);
 
         let currentPlayer = playerX;
         let gameOver = false;
+
+        const getPlayerX = () => playerX;
+        const getPlayerO = () => playerO;
 
         // Function to check End Conditions
         const checkEnd = function() {
@@ -107,12 +113,12 @@ const game = (
                 if(setReturn == 0) {
                     console.log("Switching players...");
                     currentPlayer = currentPlayer == playerX ? playerO : playerX;
-                    let turnmsg = `Player ${currentPlayer.sign} turn`;
+                    let turnmsg = `Player ${currentPlayer.name} turn`;
                     console.log(turnmsg);
                     displayController.displayTurnMessage(turnmsg);
                 }
                 else {
-                    console.log(`Cell ${pos} is already filled! Player ${currentPlayer.sign} has to play again..`);
+                    console.log(`Cell ${pos} is already filled! Player ${currentPlayer.name} has to play again..`);
                 }
                 gameboard.displayBoard();
                 displayController.displayEndMessage(endcond);
@@ -134,7 +140,7 @@ const game = (
                 console.log("Game is over. There are no more turns.");
             }
         }
-        return {doATurn, resetStatus, getCurrentPlayer};
+        return {doATurn, resetStatus, getCurrentPlayer, getPlayerX, getPlayerO};
     }
 )();
 
@@ -144,7 +150,7 @@ const displayController = (
         const statusDom = document.querySelector(".status");
         const resetBtn = document.querySelector(".reset-btn");
 
-        statusDom.textContent = `Player ${game.getCurrentPlayer().sign} turn`;
+        statusDom.textContent = `Player ${game.getCurrentPlayer().name} turn`;
 
         const drawBoard = () => {
             for(let i = 0; i < boardDom.children.length; i++) {
@@ -166,10 +172,10 @@ const displayController = (
         const displayEndMessage = (endcond) => {
             switch(endcond) {
                 case 1:
-                    statusDom.textContent = "Player X wins!";
+                    statusDom.textContent = `Player ${game.getPlayerX().name} wins!`;
                     break;
                 case 2:
-                    statusDom.textContent = "Player O wins!";
+                    statusDom.textContent = `Player ${game.getPlayerO().name} wins!`;
                     break;
                 case 3:
                     statusDom.textContent = "Draw.";
@@ -185,7 +191,7 @@ const displayController = (
             gameboard.resetBoard();
             game.resetStatus();
             drawBoard();
-            statusDom.textContent = `Player ${game.getCurrentPlayer().sign} turn`;
+            statusDom.textContent = `Player ${game.getCurrentPlayer().name} turn`;
         }
 
         resetBtn.addEventListener("click", resetGame);
