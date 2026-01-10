@@ -91,7 +91,11 @@ const game = (
         const resetStatus = () => {
             gameOver = false;
             currentPlayer = playerX;
+            let turnmsg = `Player ${currentPlayer.sign} turn`;
+            displayController.displayTurnMessage(turnmsg);
         }
+
+        const getCurrentPlayer = () => currentPlayer;
 
         const doATurn = function(pos) {
             // When game is over, there are no more turns
@@ -99,15 +103,15 @@ const game = (
             // console.log(endcond);
             console.log(gameOver)
             if(gameOver == false) {
-                let turnmsg = `Player ${currentPlayer.sign} turn`
-                console.log(turnmsg);
-                displayController.displayTurnMessage(turnmsg);
                 let setReturn = gameboard.setBoardValue(currentPlayer.sign, pos);
                 let endcond = checkEnd();
                 // Switching players
                 if(setReturn == 0) {
                     console.log("Switching players...");
                     currentPlayer = currentPlayer == playerX ? playerO : playerX;
+                    let turnmsg = `Player ${currentPlayer.sign} turn`;
+                    console.log(turnmsg);
+                    displayController.displayTurnMessage(turnmsg);
                 }
                 else {
                     console.log(`Cell ${pos} is already filled! Player ${currentPlayer.sign} has to play again..`);
@@ -132,7 +136,7 @@ const game = (
                 console.log("Game is over. There are no more turns.");
             }
         }
-        return {doATurn, resetStatus};
+        return {doATurn, resetStatus, getCurrentPlayer};
     }
 )();
 
@@ -141,6 +145,8 @@ const displayController = (
         const boardDom = document.querySelector(".board");
         const statusDom = document.querySelector(".status");
         const resetBtn = document.querySelector(".reset-btn");
+
+        statusDom.textContent = `Player ${game.getCurrentPlayer().sign} turn`;
 
         const drawBoard = () => {
             //remove previous board
@@ -152,12 +158,16 @@ const displayController = (
             for(let i = 0; i < boardDom.children.length; i++) {
                 // let cell = document.createElement("div");
                 // cell.classList.toggle("cell");
-                boardDom.children[i].textContent = gameboard.getBoard()[i];
+                if(gameboard.getBoard()[i] == "") {
+                    boardDom.children[i].textContent = "-";
+                }
+                else {
+                    boardDom.children[i].textContent = gameboard.getBoard()[i];
+                }
                 // newboard.appendChild(cell);
             }
             // board.appendChild(newboard);
         }
-
         for(let i = 0; i < boardDom.children.length; i++) {
             boardDom.children[i].addEventListener("click", () => {
                 game.doATurn(i);
