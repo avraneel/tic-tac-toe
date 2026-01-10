@@ -91,8 +91,6 @@ const game = (
         const resetStatus = () => {
             gameOver = false;
             currentPlayer = playerX;
-            let turnmsg = `Player ${currentPlayer.sign} turn`;
-            displayController.displayTurnMessage(turnmsg);
         }
 
         const getCurrentPlayer = () => currentPlayer;
@@ -149,24 +147,14 @@ const displayController = (
         statusDom.textContent = `Player ${game.getCurrentPlayer().sign} turn`;
 
         const drawBoard = () => {
-            //remove previous board
-            // const consoleboard = ["X","O","X","O","X","O","X","O","X"];
-            // const board = document.querySelector(".board");
-            // const oldboard = document.querySelector(".board");
-            // const newboard = document.createElement("div");
-            // newboard.classList.toggle("board");
             for(let i = 0; i < boardDom.children.length; i++) {
-                // let cell = document.createElement("div");
-                // cell.classList.toggle("cell");
                 if(gameboard.getBoard()[i] == "") {
                     boardDom.children[i].textContent = "-";
                 }
                 else {
                     boardDom.children[i].textContent = gameboard.getBoard()[i];
                 }
-                // newboard.appendChild(cell);
             }
-            // board.appendChild(newboard);
         }
         for(let i = 0; i < boardDom.children.length; i++) {
             boardDom.children[i].addEventListener("click", () => {
@@ -181,7 +169,7 @@ const displayController = (
                     statusDom.textContent = "Player X wins!";
                     break;
                 case 2:
-                    statusDom.textContent = "Player Y wins!";
+                    statusDom.textContent = "Player O wins!";
                     break;
                 case 3:
                     statusDom.textContent = "Draw.";
@@ -197,6 +185,7 @@ const displayController = (
             gameboard.resetBoard();
             game.resetStatus();
             drawBoard();
+            statusDom.textContent = `Player ${game.getCurrentPlayer().sign} turn`;
         }
 
         resetBtn.addEventListener("click", resetGame);
