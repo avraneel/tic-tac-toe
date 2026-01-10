@@ -8,7 +8,7 @@ function player(sign) {
 // IIFE: The anonymous function creates one board object immediately
 const gameboard = (
     function() {
-        const board = ["", "", "", "", "", "", "", "", ""];
+        let board = ["", "", "", "", "", "", "", "", ""];
 
         const setBoardValue = (val, pos) => {
             // Check if cell is already filled
@@ -27,7 +27,14 @@ const gameboard = (
                 `${board[0]}|${board[1]}|${board[2]}\n${board[3]}|${board[4]}|${board[5]}\n${board[6]}|${board[7]}|${board[8]}`
             );
         };
-        return {board, setBoardValue, displayBoard};
+
+        const resetBoard = () => {
+            board = ["", "", "", "", "", "", "", "", ""];
+        }
+
+        const getBoard = () => board;
+
+        return {resetBoard, getBoard, setBoardValue, displayBoard};
     }
 )();
 
@@ -41,7 +48,7 @@ const game = (
 
         // Function to check End Conditions
         const checkEnd = function() {
-            const board = gameboard.board;
+            const board = gameboard.getBoard();
             // Case 1: Player 1 wins
             if(
                 (board[0] === playerX.sign && board[1] === playerX.sign && board[2] === playerX.sign) ||
@@ -81,12 +88,20 @@ const game = (
             }
         }
 
+        const resetStatus = () => {
+            gameOver = false;
+            currentPlayer = playerX;
+        }
+
         const doATurn = function(pos) {
             // When game is over, there are no more turns
             // let endcond = checkEnd();
             // console.log(endcond);
+            console.log(gameOver)
             if(gameOver == false) {
-                console.log(`Player ${currentPlayer.sign} turn`);
+                let turnmsg = `Player ${currentPlayer.sign} turn`
+                console.log(turnmsg);
+                displayController.displayTurnMessage(turnmsg);
                 let setReturn = gameboard.setBoardValue(currentPlayer.sign, pos);
                 let endcond = checkEnd();
                 // Switching players
@@ -117,7 +132,7 @@ const game = (
                 console.log("Game is over. There are no more turns.");
             }
         }
-        return {doATurn};
+        return {doATurn, resetStatus};
     }
 )();
 
@@ -125,6 +140,7 @@ const displayController = (
     function() {
         const boardDom = document.querySelector(".board");
         const statusDom = document.querySelector(".status");
+        const resetBtn = document.querySelector(".reset-btn");
 
         const drawBoard = () => {
             //remove previous board
@@ -136,7 +152,7 @@ const displayController = (
             for(let i = 0; i < boardDom.children.length; i++) {
                 // let cell = document.createElement("div");
                 // cell.classList.toggle("cell");
-                boardDom.children[i].textContent = gameboard.board[i];
+                boardDom.children[i].textContent = gameboard.getBoard()[i];
                 // newboard.appendChild(cell);
             }
             // board.appendChild(newboard);
@@ -157,11 +173,24 @@ const displayController = (
                 case 2:
                     statusDom.textContent = "Player Y wins!";
                     break;
-                default:
+                case 3:
                     statusDom.textContent = "Draw.";
+                default:
             }
         }
 
-        return {displayEndMessage};
+        const displayTurnMessage = (msg) => {
+            statusDom.textContent = msg;
+        }
+
+        const resetGame = () => {
+            gameboard.resetBoard();
+            game.resetStatus();
+            drawBoard();
+        }
+
+        resetBtn.addEventListener("click", resetGame);
+
+        return {displayEndMessage, displayTurnMessage};
     }
 )();
