@@ -122,31 +122,29 @@ const game = (
 
 const displayController = (
     function() {
+        const boardDom = document.querySelector(".board");
+
         const drawBoard = () => {
             //remove previous board
             // const consoleboard = ["X","O","X","O","X","O","X","O","X"];
-            const board = document.querySelector(".board");
+            // const board = document.querySelector(".board");
             // const oldboard = document.querySelector(".board");
             // const newboard = document.createElement("div");
             // newboard.classList.toggle("board");
-            for(let i = 0; i < board.children.length; i++) {
+            for(let i = 0; i < boardDom.children.length; i++) {
                 // let cell = document.createElement("div");
                 // cell.classList.toggle("cell");
-                board.children[i].textContent = gameboard.board[i];
+                boardDom.children[i].textContent = gameboard.board[i];
                 // newboard.appendChild(cell);
             }
             // board.appendChild(newboard);
         }
 
-        const getMarker = () => {
-            const board = document.querySelector(".board");
-            let endcond = 0;
-            for(let i = 0; i < board.children.length; i++) {
-                board.children[i].addEventListener("click", () => {
-                    endcond = game.doATurn(i);
-                    drawBoard();
-                })
-            }
+        for(let i = 0; i < boardDom.children.length; i++) {
+            boardDom.children[i].addEventListener("click", () => {
+                game.doATurn(i);
+                drawBoard();
+            })
         }
 
         const displayEndModal = (endcond) => {
@@ -163,8 +161,6 @@ const displayController = (
         }
 
 
-        return {getMarker};
+        return {};
     }
 )();
-
-displayController.getMarker();
