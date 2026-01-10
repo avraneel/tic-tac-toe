@@ -98,6 +98,7 @@ const game = (
                     console.log(`Cell ${pos} is already filled! Player ${currentPlayer.sign} has to play again..`);
                 }
                 gameboard.displayBoard();
+                displayController.displayEndMessage(endcond);
                 if(gameOver == true) {
                     switch(endcond) {
                         case 1:
@@ -123,6 +124,7 @@ const game = (
 const displayController = (
     function() {
         const boardDom = document.querySelector(".board");
+        const statusDom = document.querySelector(".status");
 
         const drawBoard = () => {
             //remove previous board
@@ -147,20 +149,19 @@ const displayController = (
             })
         }
 
-        const displayEndModal = (endcond) => {
+        const displayEndMessage = (endcond) => {
             switch(endcond) {
                 case 1:
-                    alert("Player X wins!");
+                    statusDom.textContent = "Player X wins!";
                     break;
                 case 2:
-                    alert("Player Y wins!");
+                    statusDom.textContent = "Player Y wins!";
                     break;
                 default:
-                    alert("Draw.")
+                    statusDom.textContent = "Draw.";
             }
         }
 
-
-        return {};
+        return {displayEndMessage};
     }
 )();
