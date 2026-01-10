@@ -38,6 +38,7 @@ const game = (
         const playerO = player("O");
 
         let currentPlayer = playerX;
+        let gameOver = false;
 
         // Function to check End Conditions
         const checkEnd = function() {
@@ -53,7 +54,7 @@ const game = (
                 (board[0] === playerX.sign && board[4] === playerX.sign && board[8] === playerX.sign) ||
                 (board[2] === playerX.sign && board[4] === playerX.sign && board[6] === playerX.sign)
             ) {
-                console.log("Player X wins!");
+                gameOver = true;
                 return 1;
             } 
             // Case 2: Player 2 wins
@@ -67,12 +68,12 @@ const game = (
                 (board[0] === playerO.sign && board[4] === playerO.sign && board[8] === playerO.sign) ||
                 (board[2] === playerO.sign && board[4] === playerO.sign && board[6] === playerO.sign)
             ) {
-                console.log("Player O wins!");
+                gameOver = true;
                 return 2;
             }
             // Case 3: It's a draw if no cell is empty
             else if(!(board.includes(""))) {
-                console.log("It's a draw");
+                gameOver = true;
                 return 3;
             }
             // Case 4: Game goes on
@@ -82,14 +83,38 @@ const game = (
         }
 
         const doATurn = function(pos) {
-            console.log(`Player ${currentPlayer.sign} turn`);
-            gameboard.setBoardValue(currentPlayer.sign, pos);
-            gameboard.displayBoard();
-
-            // Switching players
-            currentPlayer = currentPlayer == playerX ? playerO : playerX;
-
-            return checkEnd();
+            // When game is over, there are no more turns
+            // let endcond = checkEnd();
+            // console.log(endcond);
+            if(gameOver == false) {
+                console.log(`Player ${currentPlayer.sign} turn`);
+                let setReturn = gameboard.setBoardValue(currentPlayer.sign, pos);
+                let endcond = checkEnd();
+                // Switching players
+                if(setReturn == 0) {
+                    currentPlayer = currentPlayer == playerX ? playerO : playerX;
+                }
+                else {
+                    console.log(`Player ${currentPlayer.sign} has to play again..`);
+                }
+                gameboard.displayBoard();
+                if(gameOver == true) {
+                    switch(endcond) {
+                        case 1:
+                            console.log("Player X wins!");
+                            break;
+                        case 2:
+                            console.log("Player O wins!");
+                            break;
+                        case 3:
+                            console.log("It's a draw.");
+                            break;
+                    }
+                }
+            }
+            else {
+                console.log("Game is over. There are no more turns.");
+            }
         }
         return {doATurn};
     }
@@ -99,30 +124,29 @@ const displayController = (
     function() {
         const drawBoard = () => {
             //remove previous board
-            const gamearea = document.querySelector(".gamearea");
-            const oldboard = document.querySelector(".board");
-            const newboard = document.createElement("div");
-            newboard.classList.toggle("board");
-            for(let i = 0; i < 9; i++) {
-                let cell = document.createElement("div");
-                cell.classList.toggle("cell");
-                cell.textContent = gameboard.board[i];
-                cell.addEventListener("click", () => {
-                    let endcond = 0;
-                    console.log(i);
+            // const consoleboard = ["X","O","X","O","X","O","X","O","X"];
+            const board = document.querySelector(".board");
+            // const oldboard = document.querySelector(".board");
+            // const newboard = document.createElement("div");
+            // newboard.classList.toggle("board");
+            for(let i = 0; i < board.children.length; i++) {
+                // let cell = document.createElement("div");
+                // cell.classList.toggle("cell");
+                board.children[i].textContent = gameboard.board[i];
+                // newboard.appendChild(cell);
+            }
+            // board.appendChild(newboard);
+        }
+
+        const getMarker = () => {
+            const board = document.querySelector(".board");
+            let endcond = 0;
+            for(let i = 0; i < board.children.length; i++) {
+                board.children[i].addEventListener("click", () => {
                     endcond = game.doATurn(i);
-                    console.log(endcond);
-                    if(endcond != 0) {
-                        displayEndModal(endcond);
-                    }
                     drawBoard();
                 })
-                newboard.appendChild(cell);
             }
-            if(oldboard != null) {
-                gamearea.removeChild(oldboard);
-            }
-            gamearea.appendChild(newboard);
         }
 
         const displayEndModal = (endcond) => {
@@ -139,8 +163,8 @@ const displayController = (
         }
 
 
-        return {drawBoard};
+        return {getMarker};
     }
 )();
 
-displayController.drawBoard();
+displayController.getMarker();

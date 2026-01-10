@@ -13,6 +13,7 @@ header {
 
 .gamearea {
     padding: 10em 4em;
+    gap: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,6 +23,10 @@ header {
 .board {
     display: grid;
     grid-template-columns: 100px 100px 100px;
+}
+
+.status {
+    border: 1px solid red;
 }
 
 .cell {
