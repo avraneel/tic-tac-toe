@@ -1,30 +1,42 @@
-body {
-    background-color: beige;
+* {
+    margin: 0px;
+    padding: 0px;
 }
 
-td {
-    border: 1px solid black;
-    height: 150px;
-    width: 150px;
+header {
+    text-align: center;
+    /* By default, height is for content-box, but box-sizing: border-box will make it
+     * content + padding + border */
+    padding: 4rem;
+    background-color: #bdbdbd;
 }
 
-td:hover {
-    background-color: yellow;
-}
-
-.container {
+.gamearea {
+    padding: 10em 4em;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-.cell {
-    font-size: 48px;
-    text-align: center;
+.board {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
 }
 
-.status {
-    height: 40px;
-    width: 100px;
-    border: 1px solid red;
+.cell {
+    border: 1px solid black;
+    text-align: center;
+    padding: 33.333%;
 }
+
+.cell:hover {
+    background-color: #b6b6b6;
+}
+
+footer {
+    text-align: center;
+    height: 50%;
+    background-color: #bdbdbd;
+}
+
